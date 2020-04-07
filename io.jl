@@ -11,11 +11,18 @@ end
 
 function load_instance(dataset_file::IOStream, n_features::Int64, instance::Array{Float64})
     j = 1
-    while j <= n_features
-        instance[j] = parse(Float64, readuntil(dataset_file, ','))
+    elemento = readuntil(dataset_file, ',')
+
+    if elemento != ""
+        instance[1] = parse(Float64, elemento)
         j += 1
+        while j <= n_features
+            instance[j] = parse(Float64, readuntil(dataset_file, ','))
+            j += 1
+        end
+        return parse(Float64, readuntil(dataset_file, '\n'))
     end
-    return parse(Float64, readuntil(dataset_file, '\n'))
+        return ""
 end
 
 function prediction(training_set, instance, k)
