@@ -1,9 +1,9 @@
 using Pkg
-Pkg.activate(".")
+Pkg.activate("../juliadev/")
 Pkg.instantiate()
-include("mclassifier.jl")
+include("../src/mclassifier.jl")
 
-path = "./dataset/sinthetic/"
+path = "../datasets/sinthetic/"
 datasets = ["1CDT.txt", "1CHT.txt", "2CDT.txt", "2CHT.txt"]
 
 # Parameters k, n_features, n_labels, training_set_size, label_position, n_features
