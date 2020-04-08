@@ -22,7 +22,7 @@ mutable struct MClassifier
     end
 end
 
-function MClassifier_inicialize(classifier::MClassifier, dataset_file::IOStream, n)
+function MClassifier_initialize(classifier::MClassifier, dataset_file::IOStream, n)
 
     for i=1:n
         instance = zeros(Float64, classifier.n_features)
@@ -33,28 +33,27 @@ function MClassifier_inicialize(classifier::MClassifier, dataset_file::IOStream,
 end
 
 function MClassifier_predict(classifier::MClassifier, instance)
-    distances = OrderedDict{Float64, MC}()
-
-    for x in classifier.micro_clusters
-        distances[calc_distance(instance, x.centroid)] = x
+    distances = Array{Any, 1}()
+    for micro_cluster in classifier.micro_clusters
+        push!(distances, [calc_distance(instance, micro_cluster.centroid), micro_cluster])
     end
-    distances = sort(distances)
+    
+    sort!(distances, by = x -> x[1])
 
+    array_size = length(distances)
+    micro_cluster = distances[1][2]
 
-    distances_array = collect(values(distances))
-    array_size = length(distances_array)
-    micro_cluster = distances_array[1]
     if mc_predict_r(micro_cluster, instance) <= classifier.r_limit
         mc_append_sample(micro_cluster, instance)
     else
         MClassifier_append_MC(classifier, MC(instance, micro_cluster.label))
-        count::Int16 = 0
+        count = 0
         mcs_farthest = Array{MC, 1}()
 
         for i in 0:array_size - 1
-            if distances_array[array_size - i].label == distances_array[1].label
+            if distances[array_size - i][2].label == distances[1][2].label
                 count += 1
-                append!(mcs_farthest, [distances_array[array_size - i]])
+                append!(mcs_farthest, [distances[array_size - i][2]])
                 if count == 2
                     mc_merge(mcs_farthest[1], mcs_farthest[2])
                     delete!(classifier.micro_clusters, mcs_farthest[2])
