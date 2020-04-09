@@ -31,14 +31,13 @@ function mc_set_centroid(mc::MC)
 end
 
 function mc_predict_r(mc::MC, sample::Array{Float64})
-
     ss = mc.ss + sample .^2
     ls = mc.ls + sample
     n = mc.n + 1
     return abs(sum((ss / n) - (ls / n).^ 2)) ^ (1/2)
 end
 
-function mc_append_sample(mc::MC, sample::Array{Float64})
+function append!(mc::MC, sample::Array{Float64})
     mc.n = mc.n + 1
     mc.ls = mc.ls + sample
     mc.ss = mc.ss + sample .^ 2

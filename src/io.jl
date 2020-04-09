@@ -9,26 +9,10 @@ function load_instances(dataset_file::IOStream, n_features::Int64, training_set_
     end
 end
 
-function load_instance(dataset_file::IOStream, n_features::Int64, instance::Array{Float64})
-    j = 1
-    elemento = readuntil(dataset_file, ',')
-
-    if elemento != ""
-        instance[1] = parse(Float64, elemento)
-        j += 1
-        while j <= n_features
-            instance[j] = parse(Float64, readuntil(dataset_file, ','))
-            j += 1
-        end
-        return parse(Float64, readuntil(dataset_file, '\n'))
+function load_sample(dataset_file::IOStream)
+    line = readuntil(dataset_file, "\n")
+    if line != ""
+        return [parse(Float64,x) for x in split(line, ",")]
     end
         return ""
-end
-
-function prediction(training_set, instance, k)
-
-end
-
-function print_test()
-    println("Deu certo")
 end

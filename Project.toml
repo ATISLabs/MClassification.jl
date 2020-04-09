@@ -1,0 +1,13 @@
+name = "MClassification"
+uuid = "7aadbe48-82bb-4990-b1ce-71777a0f3ceb"
+authors = ["Pedro Conrado"]
+version = "0.1.0"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
