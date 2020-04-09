@@ -15,3 +15,5 @@ jobs:
   allow_failures:
     - julia: nightly
   fast_finish: true
+script:
+  - julia -e 'using Pkg; Pkg.activate("."); Pkg.build(); Pkg.test(coverage=true)'
