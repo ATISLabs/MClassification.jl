@@ -2,8 +2,6 @@ module MClassification
     include("mc.jl")
     include("io.jl")
 
-    export MClassifier, MClassifier_initialize, MClassifier_predict
-
     mutable struct MClassifier
         n_mc::Int64
         r_limit::Float64
@@ -23,26 +21,39 @@ module MClassification
         end
     end
 
-    function MClassifier_initialize(classifier::MClassifier, dataset_file::IOStream, n)
+    function fit(dataset_file::IOStream, n, r_limit::Float64)
+        classifier = MClassifier(r_limit)
         for i=1:n
             sample = load_sample(dataset_file)
             label = sample[end]
             mc = MC(sample[1:end-1], Int64(label))
             append!(classifier, mc)
         end
+        return classifier
+    end
+    
+    function fit( X::Array{Float64, 2}, Y::Array{Int64, 1}, r_limit::Float64)
+        classifier = MClassifier(r_limit)
+        for i in 1:length(Y)
+            label = Y[i]
+            mc = MC(X[i, :], Int64(label))
+            append!(classifier, mc)
+        end
+        return classifier
     end
 
-    function MClassifier_initialize(classifier::MClassifier, X, Y::Array{Int64, 1})
+    function fit( X, Y::Array{Int64, 1}, r_limit::Float64)
+        classifier = MClassifier(r_limit)
         for i in 1:length(Y)
             label = Y[i]
             mc = MC(X[i], Int64(label))
             append!(classifier, mc)
         end
+        return classifier
     end
 
-    function MClassifier_predict(classifier::MClassifier, instance)
+    function predict(classifier::MClassifier, instance)
         distances = Array{Any, 1}()
-        println(instance)
         for micro_cluster in classifier.micro_clusters
             push!(distances, [calc_distance(instance, micro_cluster.centroid), micro_cluster])
         end
