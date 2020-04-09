@@ -30,7 +30,7 @@ Using
         classifier     = MClassification.fit(X_train, Y_train, 0.1)
         Y_pred         = MClassification.predict(model, X_test)
 
-        print("[PLS1] mae error : $(mean(abs.(Y_test .- Y_pred)))")
+        print("[MClassification] mae error : $(mean(abs.(Y_test .- Y_pred)))")
 
 References
 =======
