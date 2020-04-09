@@ -14,11 +14,9 @@ for dataset in datasets
     n_instances = 0
     hits = 0
     misses = 0
-
-    classifier = MClassifier(0.1)
-
     dataset_file = open(path * dataset , "r")
-    MClassifier_initialize(classifier, dataset_file, 150)
+    
+    classifier = MClassification.fit(dataset_file, 150, 0.1)
 
     while true
         sample = load_sample(dataset_file)
@@ -30,7 +28,7 @@ for dataset in datasets
         new_instance = sample[1:end-1]
         real_label = sample[end]
 
-        predicted_label = MClassifier_predict(classifier, new_instance)
+        predicted_label = MClassification.predict(classifier, new_instance)
 
         if real_label == predicted_label
             hits += 1
@@ -41,7 +39,7 @@ for dataset in datasets
 
     x = hits / n_instances
 
-    dataset_result = DataFrame(dataset =  dataset, n_initial_instances = 150 ,n_samples = n_instances, accuracy = round(x, digits=2, RoundDown))
+    dataset_result = DataFrame(dataset =  dataset, n_initial_instances = 150 ,n_samples = n_instances, accuracy = round(x * 100, digits=2, RoundDown))
     append!(dataset_results, dataset_result)
 end
 println(dataset_results)
