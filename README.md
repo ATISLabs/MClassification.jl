@@ -2,10 +2,7 @@
 
 [![Build Status](https://travis-ci.com/Conradox/MClassification.jl.svg?branch=master)](https://travis-ci.com/Conradox/MClassification.jl)
 [![Codecov](https://codecov.io/gh/Conradox/MClassification.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/Conradox/MClassification.jl)
-[![Coveralls](https://coveralls.io/repos/github/Conradox/MClassification.jl/badge.svg?branch=master)](https://coveralls.io/github/Conradox/MClassification.jl?branch=master)
-
-MClassification.jl
-======
+[![Coverage Status](https://coveralls.io/repos/github/Conradox/MClassification.jl/badge.svg?branch=master)](https://coveralls.io/github/Conradox/MClassification.jl?branch=master)
 
 A developmented algorithm of classification using Micro-Cluster representation from online clustering algorithms to be performed in a incremental concept drift environment. This algorithm has a competitive performance regard on state-of-art algorithms as SCARGC. Besides, it only has a hyper-parameter turned your calibrate very easy.
 
