@@ -30,7 +30,6 @@ Using
         classifier     = MClassification.fit(X_train, Y_train, 0.1)
         Y_pred         = MClassification.predict(model, X_test)
 
-        print("[MClassification] Accuracy : ")
 
 References
 =======

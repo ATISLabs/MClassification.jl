@@ -14,13 +14,7 @@ y_p = MClassification.predict(classifier, convert(Array{Float64, 2}, X[151:end, 
 
 println(convert(Array{Float64, 1}, first(X)) .* convert(Array{Float64, 1}, first(X)))
 
-hits = 0
-for i in 1:length(y_p)
-      if y[150+i] == y_p[i]
-            global hits+=1
-      end
-end
-
+X[1,:] .* X[2,:]
 vector = [1 2 5]
 teste(vector)
 function teste(teste::Array{T}) where {T<:Number}

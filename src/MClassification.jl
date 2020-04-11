@@ -66,9 +66,9 @@ module MClassification
     end
 
     function predict(classifier::MClassifier, instance::Array{T, 1}) where {T<:Number}
-        distances = CategoricalArray{}()
+        distances = Array{Any, 1}()
         for micro_cluster in classifier.micro_clusters
-            push!(distances, [MCluster.calc_distance(instance, micro_cluster.centroid), micro_cluster])
+            Base.push!(distances, [MCluster.calc_distance(instance, micro_cluster.centroid), micro_cluster])
         end
         sort!(distances, by = x -> x[1])
         array_size = length(distances)
