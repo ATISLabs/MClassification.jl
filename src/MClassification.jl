@@ -1,4 +1,5 @@
 module MClassification
+    using DataFrames
     include("./MCluster.jl")
     include("io.jl")
 
@@ -42,8 +43,30 @@ module MClassification
         return classifier
     end
 
-    function predict(classifier::MClassifier, instance)
-        distances = Array{Any, 1}()
+    function fit( X::DataFrame, Y::Array{Int64, 1}, r_limit::Float64)
+        classifier = MClassifier(r_limit)
+
+        for i in 1:length(Y)
+            label = Y[i]
+            mc = MCluster.MC(X[i, :], label)
+            append!(classifier, mc)
+        end
+        return classifier
+    end
+
+    function fit( X::DataFrame, Y::CategoricalArray, r_limit::Float64)
+        classifier = MClassifier(r_limit)
+
+        for i in 1:length(Y)
+            label = Y[i]
+            mc = MCluster.MC(X[i, :], label)
+            append!(classifier, mc)
+        end
+        return classifier
+    end
+
+    function predict(classifier::MClassifier, instance::Array{T, 1}) where {T<:Number}
+        distances = CategoricalArray{}()
         for micro_cluster in classifier.micro_clusters
             push!(distances, [MCluster.calc_distance(instance, micro_cluster.centroid), micro_cluster])
         end
@@ -70,6 +93,44 @@ module MClassification
             end
         end
         return micro_cluster.label
+    end
+
+    function predict(classifier::MClassifier, instances::Array{T, 2}) where {T<:Number}
+        y_predicted = Array{Any, 1}()
+        print(size(instances)[1])
+        test = false
+
+        for k in 1:size(instances)[1]
+            instance = instances[k, :]
+            distances = Array{Any, 1}()
+            for micro_cluster in classifier.micro_clusters
+                push!(distances, [MCluster.calc_distance(instance, micro_cluster.centroid), micro_cluster])
+            end
+            sort!(distances, by = x -> x[1])
+            array_size = length(distances)
+            micro_cluster = distances[1][2]
+
+            if MCluster.predict_r(micro_cluster, instance) <= classifier.r_limit
+                MCluster.append!(micro_cluster, instance)
+            else
+                append!(classifier, MCluster.MC(instance, micro_cluster.label))
+                count = 0
+                mcs_farthest = Array{MCluster.MC, 1}()
+
+                for i in 0:array_size - 1
+                    if distances[array_size - i][2].label == distances[1][2].label
+                        count += 1
+                        Base.append!(mcs_farthest, [distances[array_size - i][2]])
+                        if count == 2
+                            merge_farthest(classifier, mcs_farthest[1], mcs_farthest[2])
+                            break
+                        end
+                    end
+                end
+            end
+            Base.append!(y_predicted, micro_cluster.label)
+        end
+        return y_predicted
     end
 
     function append!(classifier::MClassifier, micro_cluster::MCluster.MC)

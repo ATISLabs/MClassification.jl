@@ -1,7 +1,8 @@
 module MCluster
+using DataFrames
 export calc_distance
     mutable struct MC
-        label::Int64
+        label
         n::Int64
         ls::Array{Float64}
         ss::Array{Float64}
@@ -12,7 +13,7 @@ export calc_distance
             x = new()
         end
 
-        function MC(sample::Array{Float64}, label::Int64)
+        function MC(sample::Array{Float64, 1}, label)
             v_size = length(sample)
             x = new()
             x.n = 1
@@ -24,6 +25,21 @@ export calc_distance
                 x.ss[i] = x.ss[i] + sample[i] ^ 2
             end
             x.centroid = copy(sample)
+            return x
+        end
+
+        function MC(sample::DataFrameRow, label)
+            v_size = length(sample)
+            x = new()
+            x.n = 1
+            x.label = label
+            x.ls = zeros(Float64, v_size)
+            x.ss = zeros(Float64, v_size)
+            for i = 1:v_size
+                x.ls[i] = x.ls[i] + sample[i]
+                x.ss[i] = x.ss[i] + sample[i] ^ 2
+            end
+            x.centroid = [x for x in sample]
             return x
         end
     end
@@ -42,6 +58,13 @@ export calc_distance
         n = mc.n + 1
         return abs(sum((ss / n) - (ls / n).^ 2)) ^ (1/2)
     end
+    function predict_r(mc::MC, sample_)
+        sample = convert(Array{Float64, 1}, sample_)
+        ss = mc.ss + sample .^2
+        ls = mc.ls + sample
+        n = mc.n + 1
+        return abs(sum((ss / n) - (ls / n).^ 2)) ^ (1/2)
+    end
 
     function append!(mc::MC, sample::Array{Float64})
         mc.n = mc.n + 1
@@ -52,7 +75,23 @@ export calc_distance
         mc_set_centroid(mc)
     end
 
+    function append!(mc::MC, sample_::DataFrameRow)
+        sample = convert(Array{Float64, 1}, sample_)
+        mc.n = mc.n + 1
+        mc.ls = mc.ls + sample
+        mc.ss = mc.ss + sample .^ 2
+
+        mc_set_r(mc)
+        mc_set_centroid(mc)
+    end
+
     function calc_distance(a::Array{Float64}, b::Array{Float64})
+        return sum((a - b).^2) ^ (1/2)
+    end
+
+    function calc_distance(a_, b_)
+        a = convert(Array{Float64, 1}, a_)
+        b = convert(Array{Float64, 1}, b_)
         return sum((a - b).^2) ^ (1/2)
     end
 

@@ -3,6 +3,16 @@ uuid = "7aadbe48-82bb-4990-b1ce-71777a0f3ceb"
 authors = ["Pedro Conrado"]
 version = "0.1.0"
 
+[deps]
+DecisionTree = "7806a523-6efd-50cb-b5f6-3fa6f1930dbb"
+Electron = "a1bb12fb-d4d1-54b4-b10a-ee7951ef7ad3"
+MLJ = "add582a8-e3ab-11e8-2d5e-e98b27df1bc7"
+MLJModels = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
+NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Queryverse = "612083be-0b0f-5412-89c1-4e7c75506a58"
+ScikitLearn = "3646fa90-6ef7-5e7e-9f22-8aca16db6324"
+
 [compat]
 julia = "1"
 

@@ -4,7 +4,7 @@
 [![Codecov](https://codecov.io/gh/Conradox/MClassification.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/Conradox/MClassification.jl)
 [![Coverage Status](https://coveralls.io/repos/github/Conradox/MClassification.jl/badge.svg?branch=master)](https://coveralls.io/github/Conradox/MClassification.jl?branch=master)
 
-A developmented algorithm of classification using Micro-Cluster representation from online clustering algorithms to be performed in a incremental concept drift environment. This algorithm has a competitive performance regard on state-of-art algorithms as SCARGC. Besides, it only has a hyper-parameter turned your calibrate very easy.
+A developed algorithm of classification using Micro-Cluster representation from online clustering algorithms to be performed in a incremental concept drift environment. This algorithm has a competitive performance when put against state-of-art algorithms such as SCARGC. Moreover, it only has one hyper-parameter turning into your calibration not difficult.
 
 Install
 =======
@@ -30,7 +30,7 @@ Using
         classifier     = MClassification.fit(X_train, Y_train, 0.1)
         Y_pred         = MClassification.predict(model, X_test)
 
-        print("[MClassification] mae error : $(mean(abs.(Y_test .- Y_pred)))")
+        print("[MClassification] Accuracy : ")
 
 References
 =======
