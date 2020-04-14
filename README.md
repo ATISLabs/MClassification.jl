@@ -20,7 +20,9 @@ Using
     ========
 
         using MClassification
-        # Evaluating the model
+
+        # Learning and classifying using a small sample set
+
         X_train             = [5.2603 0.40807; 0.51512 -0.7065; 4.721 4.5322;
                                0.36285 1.0328; 0.89978 1.6674; 2.7659 0.74216]
 
