@@ -10,10 +10,6 @@ module MClassification
         n_features::Int64
         metric
 
-        function MClassifier()
-            new()
-        end
-
         function MClassifier(;r_limit = 0.2, metric = euclidean_distance)
             x = new()
             x.r_limit = r_limit

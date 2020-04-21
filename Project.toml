@@ -13,6 +13,7 @@ MLJModels = "d491faf4-2d78-11e9-2867-c94bc002c0b7"
 NearestNeighbors = "b8a86587-4115-5ab1-83bc-aa920d37bbce"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
 Queryverse = "612083be-0b0f-5412-89c1-4e7c75506a58"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 
 [compat]
 julia = "1"
