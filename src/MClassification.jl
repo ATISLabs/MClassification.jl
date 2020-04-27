@@ -52,6 +52,18 @@ module MClassification
         sort!(distances, by = x -> x[1])
         array_size = length(distances)
         micro_cluster = distances[1][2]
+        return micro_cluster.label
+    end
+
+    function updatePredict(classifier::MClassifier, fitresult, instance::Array{T, 1}) where {T<:Number}
+        distances = Array{Any, 1}()
+        for micro_cluster in fitresult
+            Base.push!(distances, [classifier.metric(instance, micro_cluster.centroid), micro_cluster])
+        end
+
+        sort!(distances, by = x -> x[1])
+        array_size = length(distances)
+        micro_cluster = distances[1][2]
 
         if MCluster.predict_r(micro_cluster, instance) <= classifier.r_limit
             MCluster.append!(micro_cluster, instance)
@@ -74,11 +86,11 @@ module MClassification
         return micro_cluster.label
     end
 
-    function predict(classifier::MClassifier, fitresult, samples::Array{T, 2}) where {T<:Number}
+    function updatePredict(classifier::MClassifier, fitresult, samples::Array{T, 2}) where {T<:Number}
         return [predict(classifier, fitresult, samples[i, :]) for i in 1:nrows(samples)]
     end
 
-    function predict(classifier::MClassifier, fitresult, samples) where {T<:Number}
+    function updatePredict(classifier::MClassifier, fitresult, samples) where {T<:Number}
         X = Matrix(samples)
         predict(classifier, fitresult, X)
     end
