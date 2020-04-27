@@ -10,15 +10,15 @@ module MClassification
         n_features::Int64
         metric
 
-        function MClassifier(;r_limit = 0.2, metric = euclidean_distance)
-            x = new()
-            x.r_limit = r_limit
-            x.metric = metric
-            return x
+        function MClassifier(;r_limit = 0.1, metric = euclidean_distance)
+            new_MClassifier = new()
+            new_MClassifier.r_limit = r_limit
+            new_MClassifier.metric = metric
+            return new_MClassifier
         end
     end
 
-    function MLJBase.fit(model::MClassifier, verbosity::Int, X::Array{T, 2}, Y::CategoricalArray) where {T<:Number}
+    function fit(model::MClassifier, verbosity::Int, X::Array{T, 2}, Y::CategoricalArray) where {T<:Number}
         fitresult = Set{MCluster.MC}()
         for i in 1:length(Y)
             mc = MCluster.MC(X[i, :], Y[i])
@@ -30,7 +30,7 @@ module MClassification
     end
 
 
-    function MLJBase.fit(model::MClassifier, verbosity::Int, X, Y::CategoricalArray)
+    function fit(model::MClassifier, verbosity::Int, X, Y::CategoricalArray)
         x = Matrix(X)
         fitresult = Set{MCluster.MC}()
         for i in 1:length(Y)
@@ -43,7 +43,7 @@ module MClassification
         return fitresult, cache, report
     end
 
-    function MLJBase.predict(classifier::MClassifier, fitresult, instance::Array{T, 1}) where {T<:Number}
+    function predict(classifier::MClassifier, fitresult, instance::Array{T, 1}) where {T<:Number}
         distances = Array{Any, 1}()
         for micro_cluster in fitresult
             Base.push!(distances, [classifier.metric(instance, micro_cluster.centroid), micro_cluster])
@@ -74,11 +74,11 @@ module MClassification
         return micro_cluster.label
     end
 
-    function MLJBase.predict(classifier::MClassifier, fitresult, samples::Array{T, 2}) where {T<:Number}
+    function predict(classifier::MClassifier, fitresult, samples::Array{T, 2}) where {T<:Number}
         return [predict(classifier, fitresult, samples[i, :]) for i in 1:nrows(samples)]
     end
 
-    function MLJBase.predict(classifier::MClassifier, fitresult, samples) where {T<:Number}
+    function predict(classifier::MClassifier, fitresult, samples) where {T<:Number}
         X = Matrix(samples)
         predict(classifier, fitresult, X)
     end
@@ -91,4 +91,7 @@ module MClassification
         mc_a = MCluster.merge(mc_a, mc_b)
         delete!(micro_clusters, mc_b)
     end
+
+    include("./MLJBase.jl")
+    include("./EasyStream.jl")
 end # module
