@@ -1,5 +1,5 @@
 module MClassification
-    using DataFrames, MLJBase, Distances
+    using DataFrames, MLJBase, Distances, EasyStream
     export euclidean_distance
 
     euclidean_distance = Distances.Euclidean()
