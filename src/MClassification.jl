@@ -1,11 +1,12 @@
 module MClassification
-    using DataFrames, MLJBase, Distances, EasyStream
+    using DataFrames, MLJBase, Distances
+    using EasyStream
     export euclidean_distance
 
     euclidean_distance = Distances.Euclidean()
     include("./MCluster.jl")
 
-    mutable struct MClassifier <: MLJBase.Deterministic
+    mutable struct MClassifier <: EasyStream.Deterministic
         r_limit::Float64
         n_features::Int64
         metric
@@ -55,7 +56,7 @@ module MClassification
         return micro_cluster.label
     end
 
-    function updatePredict(classifier::MClassifier, fitresult, instance::Array{T, 1}) where {T<:Number}
+    function update_predict(classifier::MClassifier, fitresult, instance::Array{T, 1}) where {T<:Number}
         distances = Array{Any, 1}()
         for micro_cluster in fitresult
             Base.push!(distances, [classifier.metric(instance, micro_cluster.centroid), micro_cluster])
@@ -86,13 +87,13 @@ module MClassification
         return micro_cluster.label
     end
 
-    function updatePredict(classifier::MClassifier, fitresult, samples::Array{T, 2}) where {T<:Number}
-        return [predict(classifier, fitresult, samples[i, :]) for i in 1:nrows(samples)]
+    function update_predict(classifier::MClassifier, fitresult, samples::Array{T, 2}) where {T<:Number}
+        return [update_predict(classifier, fitresult, samples[i, :]) for i in 1:nrows(samples)]
     end
 
-    function updatePredict(classifier::MClassifier, fitresult, samples) where {T<:Number}
+    function update_predict(classifier::MClassifier, fitresult, samples) where {T<:Number}
         X = Matrix(samples)
-        predict(classifier, fitresult, X)
+        update_predict(classifier, fitresult, X)
     end
 
     function append!(classifier::MClassifier, micro_cluster::MCluster.MC)

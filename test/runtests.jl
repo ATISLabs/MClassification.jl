@@ -12,11 +12,11 @@ using MClassification, Test, DataFrames
     1.0293 0.12319;
     3.3528 3.261]
     y = MClassification.categorical([2, 1, 2, 1, 1, 1, 1, 1, 2])
-    model = MClassification.MClassifier(r_limit=0.1)
+    model = MClassification.MClassifier(r_limit = 0.1)
 
     fitresult, cache, report = MClassification.fit(model, 0, X[1:initial_samples, :], y[1:initial_samples])
 
-    y_predicted = MClassification.predict(model, fitresult, X[initial_samples+1:end, :])
+    y_predicted = MClassification.update_predict(model, fitresult, X[initial_samples+1:end, :])
 
     for i in 1:length(y)-initial_samples
         @test y_predicted[i] == y[initial_samples+i]
@@ -38,11 +38,11 @@ end
     3.3528 3.261] |> DataFrame
 
     y = MClassification.categorical([2, 1, 2, 1, 1, 1, 1, 1, 2])
-    model = MClassification.MClassifier(r_limit=0.1)
+    model = MClassification.MClassifier()
 
     fitresult, cache, report = MClassification.fit(model, 0, X[1:initial_samples, :], y[1:initial_samples])
 
-    y_predicted = MClassification.predict(model, fitresult, X[initial_samples+1:end, :])
+    y_predicted = MClassification.update_predict(model, fitresult, X[initial_samples+1:end, :])
 
     for i in 1:length(y)-initial_samples
         @test y_predicted[i] == y[initial_samples+i]

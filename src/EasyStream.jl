@@ -7,5 +7,5 @@ function EasyStream.predict(classifier::MClassifier, fitresult, instance)
 end
 
 function EasyStream.updatePredict(classifier::MClassifier, fitresult, instance)
-    return updatePredict(classifier, fitresult, instance)
+    return update_predict(classifier, fitresult, instance)
 end
